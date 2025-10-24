@@ -155,3 +155,5 @@ kubectl logs pod/<pod-name>
 ## Acknowledgments
 - Built with Flask and simple client-side JS.
 - Deployment examples inspired by Docker + Kubernetes patterns.
+
+> ⭐ If you find this project helpful, please give it a star!
