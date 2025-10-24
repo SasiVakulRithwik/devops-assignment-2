@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Booking System</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary);
+        }
+        
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .section {
+            padding: 4rem 0;
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 5rem 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2980b9;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .tables-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .table-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+        
+        .table-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .table-name {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .table-capacity {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+        
+        .table-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .status-available {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+        }
+        
+        .status-booked {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--accent);
+        }
+        
+        .booking-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+        
+        .booking-summary {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .history-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .history-table {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .history-date {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .history-details div {
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-history {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+        
+        .empty-history i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+        
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background-color: var(--success);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateX(150%);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+            
+            nav ul {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                flex-direction: column;
+                background-color: var(--primary);
+                width: 200px;
+                padding: 1rem;
+                transition: right 0.3s;
+                box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav ul.active {
+                right: 0;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .tables-container {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Table<span>Book</span></div>
+            <button class="nav-toggle">☰</button>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link" data-section="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-section="tables">Book a Table</a></li>
+                    <li><a href="#" class="nav-link" data-section="history">Booking History</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>Reserve Your Perfect Table</h1>
+            <p>Experience fine dining with our easy table booking system. Select your preferred table, choose a date and time, and enjoy your meal.</p>
+            <a href="#" class="btn nav-link" data-section="tables">Book Now</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <section id="home" class="section active">
+            <h2 class="section-title">Welcome to TableBook</h2>
+            <div class="tables-container">
+                <div class="table-card">
+                    <div class="table-icon">🍽️</div>
+                    <h3 class="table-name">Table 1</h3>
+                    <p class="table-capacity">Capacity: 2-4 people</p>
+                    <span class="table-status status-available">Available</span>
+                </div>
+                <div class="table-card">
+                    <div class="table-icon">🍽️</div>
+                    <h3 class="table-name">Table 2</h3>
+                    <p class="table-capacity">Capacity: 4-6 people</p>
+                    <span class="table-status status-available">Available</span>
+                </div>
+                <div class="table-card">
+                    <div class="table-icon">🍽️</div>
+                    <h3 class="table-name">Table 3</h3>
+                    <p class="table-capacity">Capacity: 2 people</p>
+                    <span class="table-status status-booked">Booked</span>
+                </div>
+                <div class="table-card">
+                    <div class="table-icon">🍽️</div>
+                    <h3 class="table-name">Table 4</h3>
+                    <p class="table-capacity">Capacity: 6-8 people</p>
+                    <span class="table-status status-available">Available</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="tables" class="section">
+            <h2 class="section-title">Select Your Table</h2>
+            <div class="tables-container" id="tables-list">
+                <!-- Tables will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <section id="booking" class="section">
+            <h2 class="section-title">Complete Your Booking</h2>
+            <div class="booking-form">
+                <h3 id="selected-table-name" style="text-align: center; margin-bottom: 1.5rem;"></h3>
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Booking Date</label>
+                        <input type="date" id="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Booking Time</label>
+                        <input type="time" id="time" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="guests">Number of Guests</label>
+                        <input type="number" id="guests" class="form-control" min="1" max="10" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%;">Confirm Booking</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="confirmation" class="section">
+            <h2 class="section-title">Booking Confirmed!</h2>
+            <div class="booking-summary">
+                <h3 style="text-align: center; margin-bottom: 1.5rem;">Your Booking Details</h3>
+                <div class="summary-item">
+                    <span>Table:</span>
+                    <span id="conf-table">Table 1</span>
+                </div>
+                <div class="summary-item">
+                    <span>Name:</span>
+                    <span id="conf-name">John Doe</span>
+                </div>
+                <div class="summary-item">
+                    <span>Email:</span>
+                    <span id="conf-email">john@example.com</span>
+                </div>
+                <div class="summary-item">
+                    <span>Phone:</span>
+                    <span id="conf-phone">+1234567890</span>
+                </div>
+                <div class="summary-item">
+                    <span>Date:</span>
+                    <span id="conf-date">2023-10-15</span>
+                </div>
+                <div class="summary-item">
+                    <span>Time:</span>
+                    <span id="conf-time">19:00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Guests:</span>
+                    <span id="conf-guests">4</span>
+                </div>
+                <div class="summary-item">
+                    <span>Booking ID:</span>
+                    <span id="conf-id">TB12345</span>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn nav-link" data-section="home">Back to Home</button>
+                    <button class="btn btn-secondary" id="print-ticket">Print Ticket</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="history" class="section">
+            <h2 class="section-title">Booking History</h2>
+            <div class="history-container" id="history-list">
+                <!-- Booking history will be populated by JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 TableBook. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div class="notification" id="notification">
+        Booking confirmed successfully!
+    </div>
+
+    <script>
+        // Sample table data
+        const tables = [
+            { id: 1, name: "Table 1", capacity: "2-4", status: "available" },
+            { id: 2, name: "Table 2", capacity: "4-6", status: "available" },
+            { id: 3, name: "Table 3", capacity: "2", status: "booked" },
+            { id: 4, name: "Table 4", capacity: "6-8", status: "available" },
+            { id: 5, name: "Table 5", capacity: "4", status: "available" },
+            { id: 6, name: "Table 6", capacity: "2", status: "booked" },
+            { id: 7, name: "Table 7", capacity: "8-10", status: "available" },
+            { id: 8, name: "Table 8", capacity: "2-4", status: "available" }
+        ];
+
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set minimum date to today
+            const dateInput = document.getElementById('date');
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.min = today;
+            
+            // Navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('nav ul');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetSection = this.getAttribute('data-section');
+                    
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    document.getElementById(targetSection).classList.add('active');
+                    
+                    // Close mobile menu if open
+                    navMenu.classList.remove('active');
+                });
+            });
+            
+            // Mobile menu toggle
+            navToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+            
+            // Initialize tables
+            renderTables();
+            
+            // Initialize booking history
+            renderBookingHistory();
+            
+            // Booking form submission
+            document.getElementById('booking-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                confirmBooking();
+            });
+            
+            // Print ticket functionality
+            document.getElementById('print-ticket').addEventListener('click', function() {
+                window.print();
+            });
+        });
+        
+        // Render tables in the tables section
+        function renderTables() {
+            const tablesList = document.getElementById('tables-list');
+            tablesList.innerHTML = '';
+            
+            tables.forEach(table => {
+                const tableCard = document.createElement('div');
+                tableCard.className = 'table-card';
+                
+                tableCard.innerHTML = `
+                    <div class="table-icon">🍽️</div>
+                    <h3 class="table-name">${table.name}</h3>
+                    <p class="table-capacity">Capacity: ${table.capacity} people</p>
+                    <span class="table-status status-${table.status}">${table.status === 'available' ? 'Available' : 'Booked'}</span>
+                    ${table.status === 'available' ? 
+                        `<button class="btn" style="margin-top: 1rem;" data-table-id="${table.id}">Select Table</button>` : 
+                        ''}
+                `;
+                
+                tablesList.appendChild(tableCard);
+            });
+            
+            // Add event listeners to table selection buttons
+            document.querySelectorAll('#tables-list .btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tableId = this.getAttribute('data-table-id');
+                    selectTable(tableId);
+                });
+            });
+        }
+        
+        // Handle table selection
+        function selectTable(tableId) {
+            const table = tables.find(t => t.id == tableId);
+            
+            if (table && table.status === 'available') {
+                // Update selected table name
+                document.getElementById('selected-table-name').textContent = `Booking ${table.name}`;
+                
+                // Navigate to booking form
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById('booking').classList.add('active');
+                
+                // Store selected table in session storage
+                sessionStorage.setItem('selectedTable', JSON.stringify(table));
+            }
+        }
+        
+        // Confirm booking
+        function confirmBooking() {
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                guests: document.getElementById('guests').value
+            };
+            
+            // Get selected table
+            const selectedTable = JSON.parse(sessionStorage.getItem('selectedTable'));
+            
+            // Generate booking ID
+            const bookingId = 'TB' + Math.floor(10000 + Math.random() * 90000);
+            
+            // Create booking object
+            const booking = {
+                id: bookingId,
+                table: selectedTable.name,
+                ...formData,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save to session storage
+            saveBooking(booking);
+            
+            // Update confirmation page
+            document.getElementById('conf-table').textContent = booking.table;
+            document.getElementById('conf-name').textContent = booking.name;
+            document.getElementById('conf-email').textContent = booking.email;
+            document.getElementById('conf-phone').textContent = booking.phone;
+            document.getElementById('conf-date').textContent = booking.date;
+            document.getElementById('conf-time').textContent = booking.time;
+            document.getElementById('conf-guests').textContent = booking.guests;
+            document.getElementById('conf-id').textContent = booking.id;
+            
+            // Navigate to confirmation page
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('confirmation').classList.add('active');
+            
+            // Show notification
+            showNotification('Booking confirmed successfully!');
+            
+            // Update table status
+            updateTableStatus(selectedTable.id, 'booked');
+            
+            // Clear form
+            document.getElementById('booking-form').reset();
+            
+            // Update booking history
+            renderBookingHistory();
+        }
+        
+        // Save booking to session storage
+        function saveBooking(booking) {
+            let bookings = JSON.parse(sessionStorage.getItem('bookings')) || [];
+            bookings.push(booking);
+            sessionStorage.setItem('bookings', JSON.stringify(bookings));
+        }
+        
+        // Update table status
+        function updateTableStatus(tableId, status) {
+            const tableIndex = tables.findIndex(t => t.id == tableId);
+            if (tableIndex !== -1) {
+                tables[tableIndex].status = status;
+                renderTables();
+            }
+        }
+        
+        // Render booking history
+        function renderBookingHistory() {
+            const historyList = document.getElementById('history-list');
+            const bookings = JSON.parse(sessionStorage.getItem('bookings')) || [];
+            
+            if (bookings.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-history">
+                        <i>📝</i>
+                        <h3>No bookings yet</h3>
+                        <p>Your booking history will appear here once you make a reservation.</p>
+                        <a href="#" class="btn nav-link" data-section="tables" style="margin-top: 1rem;">Book a Table</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            historyList.innerHTML = '';
+            
+            // Sort bookings by date (newest first)
+            bookings.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            bookings.forEach(booking => {
+                const historyCard = document.createElement('div');
+                historyCard.className = 'history-card';
+                
+                const bookingDate = new Date(booking.timestamp);
+                const formattedDate = bookingDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                historyCard.innerHTML = `
+                    <div class="history-header">
+                        <div class="history-table">${booking.table}</div>
+                        <div class="history-date">${formattedDate}</div>
+                    </div>
+                    <div class="history-details">
+                        <div><strong>Name:</strong> ${booking.name}</div>
+                        <div><strong>Date:</strong> ${booking.date}</div>
+                        <div><strong>Time:</strong> ${booking.time}</div>
+                        <div><strong>Guests:</strong> ${booking.guests}</div>
+                        <div><strong>Booking ID:</strong> ${booking.id}</div>
+                    </div>
+                `;
+                
+                historyList.appendChild(historyCard);
+            });
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
