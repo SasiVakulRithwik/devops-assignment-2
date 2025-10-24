@@ -135,8 +135,6 @@ kubectl rollout status deployment/devops-assignment-2 --timeout=180s
 kubectl get deployments -o wide
 kubectl get pods -o wide
 kubectl get svc
-kubectl describe pod <pod-name>
-kubectl logs pod/<pod-name>
 ```
 
 ## Helpful commands (summary)
@@ -145,7 +143,7 @@ kubectl logs pod/<pod-name>
 - Docker run: `docker run -p 8001:8000 devops-assignment-2 `
 - Kubernetes apply: `kubectl apply -f k8s/deployment.yaml && kubectl apply -f k8s/service.yaml`
 - Check pods/services: `kubectl get pods, minikube service devops-assignment-2 `
-- View logs: `kubectl logs pod/<pod-name>` or `docker logs <container>`
+- View logs: `kubectl logs pod/devops-assignment-2` or `docker logs devops-assignment-2-app`
 
 ## Author
 - GitHub: https://github.com/SasiVakulRithwik
